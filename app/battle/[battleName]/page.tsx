@@ -57,7 +57,7 @@ const Page = () => {
     useEffect(() => {
         const getPlayerInfo = async () => {
             try {
-                if (!gameData.activeBattle || !contract) return;
+                if (!gameData?.activeBattle || !contract) return;
 
                 const players = gameData.activeBattle.players;
                 const isPlayer1 = players[0].toLowerCase() === walletAddress.toLowerCase();
@@ -69,27 +69,20 @@ const Page = () => {
                 const player01 = await contract.getPlayer(player01Address);
                 const player02 = await contract.getPlayer(player02Address);
 
-                const p1Att = Number(p1TokenData.attackStrength);
-                const p1Def = Number(p1TokenData.defenseStrength);
-                const p1H = Number(player01.playerHealth);
-                const p1M = Number(player01.playerMana);
-                const p2H = Number(player02.playerHealth);
-                const p2M = Number(player02.playerMana);
-
                 setPlayer1({
                     ...player01,
-                    att: p1Att,
-                    def: p1Def,
-                    health: p1H,
-                    mana: p1M,
+                    att: Number(p1TokenData.attackStrength),
+                    def: Number(p1TokenData.defenseStrength),
+                    health: Number(player01.playerHealth),
+                    mana: Number(player01.playerMana),
                 });
 
                 setPlayer2({
                     ...player02,
                     att: 'X',
                     def: 'X',
-                    health: p2H,
-                    mana: p2M,
+                    health: Number(player02.playerHealth),
+                    mana: Number(player02.playerMana),
                 });
             } catch (error) {
                 if (error instanceof Error) {
@@ -99,7 +92,8 @@ const Page = () => {
         };
 
         getPlayerInfo();
-    }, [contract, gameData, battleId]);
+    }, [contract, gameData?.activeBattle?.players, walletAddress, battleId]);
+
 
     useEffect(() => {
         const timer = setTimeout(() => {
